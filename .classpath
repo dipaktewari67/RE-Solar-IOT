@@ -11,13 +11,13 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/java project/postgresql-42.2.5.jar"/>
-	<classpathentry kind="lib" path="D:/java project/httpclient-4.2.3.jar"/>
-	<classpathentry kind="lib" path="D:/java project/gson-2.8.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="Dependencies/gson-2.8.2.jar"/>
+	<classpathentry kind="lib" path="Dependencies/httpclient-4.2.3.jar"/>
+	<classpathentry kind="lib" path="Dependencies/postgresql-42.2.5.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
