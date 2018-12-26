@@ -14,4 +14,10 @@ public class Initializer {
 		new App().connect();
 	}
 
+	@RequestMapping(path = "/getVoltage", method = RequestMethod.POST)
+	public Integer[] getVoltage(String salesForceString) {
+		
+		return null;
+	}
+
 }
