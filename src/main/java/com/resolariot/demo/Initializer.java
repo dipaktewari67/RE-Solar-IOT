@@ -9,7 +9,7 @@ import com.resolariot.postgres.App;
 @RestController
 public class Initializer {
 
-	@RequestMapping(path = "/init", method = RequestMethod.GET)
+	@RequestMapping(path = "/", method = RequestMethod.GET)
 	public void init() {
 		new App().connect();
 	}
