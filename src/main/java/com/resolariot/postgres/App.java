@@ -37,7 +37,7 @@ public class App {
 			LOG.info("Connected to the PostgreSQL server successfully.");
 			Statement stmt = conn.createStatement();
 			LOG.info("after connection");
-			ResultSet rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" BETWEEN 8 AND 12 limit 10");
+			ResultSet rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">= 8  limit 10");
 			LOG.info("hello");
 			while (rs.next()) {
 				LOG.info(rs.getString(1));
@@ -61,7 +61,7 @@ public class App {
 	}
 
 	
-	public Connection getVoltage(String voltage,String season) {
+	public Connection getVoltage(String status,String weather) {
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(url, user, password);

@@ -15,8 +15,9 @@ public class Initializer {
 	}
 
 	@RequestMapping(path = "/getVoltage", method = RequestMethod.POST)
-	public Integer[] getVoltage(String voltage, String Season) {
-		System.out.println(Season);
+	public Integer[] getVoltage(String Status, String Weather) {
+		System.out.println(Weather);
+		new App().getVoltage(Status, Weather);
 		return null;
 	}
 
