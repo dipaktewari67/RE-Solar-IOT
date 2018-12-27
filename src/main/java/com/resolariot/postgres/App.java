@@ -62,43 +62,49 @@ public class App {
 		return conn;
 	}
 
-	
-	public Connection getVoltage(String status,String weather) {
+	public Connection getVoltage(String status, String weather) {
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(url, user, password);
 			LOG.info("Connected to the PostgreSQL server successfully.");
 			Statement stmt = conn.createStatement();
 			LOG.info("after connection");
-			
-			
-			ResultSet rs=null;
-			if(status=="true" & weather=="sunny")
-		    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=11 and \"Voltage\"<=12 limit 10");
-			
-			
-			else if(status=="true" & weather=="rainy")
-			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=9 and \"Voltage\"<=10 limit 10");
-			
-			else if(status=="true" & weather=="stormy")
-			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=10 and \"Voltage\"<=11 limit 10");
-			
-			else if(status=="true" & weather=="moon")
-			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=8 and \"Voltage\"<=9 limit 10");
-			
-			else if(status=="false" & weather=="sunny")
-			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=7 and \"Voltage\"<8 limit 10");
-			
-			else if(status=="false" & weather=="rainy")
-			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=1 and \"Voltage\"<2 limit 10");
-			
-			else if(status=="false" & weather=="stormy")
-			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=2 and \"Voltage\"<3 limit 10");
-			
-			else if(status=="false" & weather=="moon")
-			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=3 and \"Voltage\"<4 limit 10");
-			
-			 
+
+			boolean statusBool = Boolean.getBoolean(status);
+
+			ResultSet rs = null;
+			if (statusBool && weather.equals("sunny"))
+				rs = stmt.executeQuery(
+						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=11 and \"Voltage\"<=12 limit 10");
+
+			else if (statusBool && weather.equals("rainy"))
+				rs = stmt.executeQuery(
+						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=9 and \"Voltage\"<=10 limit 10");
+
+			else if (statusBool && weather.equals("stormy"))
+				rs = stmt.executeQuery(
+						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=10 and \"Voltage\"<=11 limit 10");
+
+			else if (statusBool && weather.equals("moon"))
+				rs = stmt.executeQuery(
+						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=8 and \"Voltage\"<=9 limit 10");
+
+			else if (!statusBool && weather.equals("sunny"))
+				rs = stmt.executeQuery(
+						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=7 and \"Voltage\"<8 limit 10");
+
+			else if (!statusBool && weather.equals("rainy"))
+				rs = stmt.executeQuery(
+						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=1 and \"Voltage\"<2 limit 10");
+
+			else if (!statusBool && weather.equals("stormy"))
+				rs = stmt.executeQuery(
+						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=2 and \"Voltage\"<3 limit 10");
+
+			else if (!statusBool && weather.equals("moon"))
+				rs = stmt.executeQuery(
+						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=3 and \"Voltage\"<4 limit 10");
+
 			LOG.info("hello");
 			while (rs.next()) {
 				LOG.info(rs.getString(1));
