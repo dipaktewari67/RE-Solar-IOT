@@ -37,10 +37,12 @@ public class App {
 			LOG.info("Connected to the PostgreSQL server successfully.");
 			Statement stmt = conn.createStatement();
 			LOG.info("after connection");
-			ResultSet rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">= 8  limit 10");
+			ResultSet rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" limit 10");
 			LOG.info("hello");
 			while (rs.next()) {
 				LOG.info(rs.getString(1));
+				String s = rs.getString(1);
+				LOG.info(s);
 				// String voltage = rs.getString("Voltage");
 				// System.out.format("%s\n",voltage);
 			}
@@ -68,10 +70,40 @@ public class App {
 			LOG.info("Connected to the PostgreSQL server successfully.");
 			Statement stmt = conn.createStatement();
 			LOG.info("after connection");
-			ResultSet rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\"  BETWEEN 8 AND 12 limit 10");
+			
+			
+			ResultSet rs=null;
+			if(status=="true" & weather=="sunny")
+		    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=11 and \"Voltage\"<=12 limit 10");
+			
+			
+			else if(status=="true" & weather=="rainy")
+			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=9 and \"Voltage\"<=10 limit 10");
+			
+			else if(status=="true" & weather=="stormy")
+			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=10 and \"Voltage\"<=11 limit 10");
+			
+			else if(status=="true" & weather=="moon")
+			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=8 and \"Voltage\"<=9 limit 10");
+			
+			else if(status=="false" & weather=="sunny")
+			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=7 and \"Voltage\"<8 limit 10");
+			
+			else if(status=="false" & weather=="rainy")
+			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=1 and \"Voltage\"<2 limit 10");
+			
+			else if(status=="false" & weather=="stormy")
+			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=2 and \"Voltage\"<3 limit 10");
+			
+			else if(status=="false" & weather=="moon")
+			    rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=3 and \"Voltage\"<4 limit 10");
+			
+			 
 			LOG.info("hello");
 			while (rs.next()) {
 				LOG.info(rs.getString(1));
+				String s = rs.getString(1);
+				LOG.info(s);
 				// String voltage = rs.getString("Voltage");
 				// System.out.format("%s\n",voltage);
 			}
@@ -90,37 +122,6 @@ public class App {
 		}
 		return conn;
 	}
-//	public Integer[] getVoltage(String voltage) {
-//
-//		Connection conn = null;
-//		try {
-//			conn = DriverManager.getConnection(url, user, password);
-//			LOG.info("Connected to the PostgreSQL server successfully.");
-//			Statement stmt = conn.createStatement();
-//			LOG.info("after connection");
-//			ResultSet rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" limit " + voltage);
-//			LOG.info("hello");
-//			while (rs.next()) {
-//				LOG.info(rs.getString(1));
-//				// String voltage = rs.getString("Voltage");
-//				// System.out.format("%s\n",voltage);
-//			}
-//			/*
-//			 * if(rs.next()){ if(starttime != null){
-//			 * 
-//			 * } else{ starttime = rs.getTimestamp("event_datetime__c"); long noofmillisecs
-//			 * = starttime.getTime()+15*60*1000; endtime = new Timestamp(noofmillisecs); }
-//			 * App app = new App(); app.timerfunction(starttime,endtime);
-//			 * 
-//			 * }
-//			 **/
-//
-//		} catch (SQLException e) {
-//			LOG.info("here 11 " + e.getMessage());
-//		}
-//		return conn;
-//	
-//	}
 
 	public void timerfunction(Timestamp startTime, Timestamp endTime) throws SQLException {
 
