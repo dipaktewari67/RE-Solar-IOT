@@ -5,37 +5,31 @@
 */
 package com.resolariot.postgres;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author pandhir
- */
+import com.resolariot.demo.VoltageRequest;
+
 public class App {
 
-	private final String url = "jdbc:postgresql://ec2-23-21-188-236.compute-1.amazonaws.com:5432/df65a718i89dtb";
-	private final String user = "xyjjlzjifvyfzq";
-	private final String password = "60a0aafc09296d38da99e3a72c58782d47e5c0c4af4bc5632b2a9a167ce1dedc";
+	private final static Logger LOG = LoggerFactory.getLogger(App.class);
 
-	private final org.slf4j.Logger LOG = LoggerFactory.getLogger(App.class);
+	private static final String STORMY = "stormy";
+	private static final String MOON = "moon";
+	private static final String RAINY = "rainy";
+	private static final String SUNNY = "sunny";
 
-	/**
-	 * @param args the command line arguments
-	 */
-	public Connection connect() {
-		Connection conn = null;
+	public void connect() {
 		try {
-			conn = DriverManager.getConnection(url, user, password);
-			LOG.info("Connected to the PostgreSQL server successfully.");
-			Statement stmt = conn.createStatement();
+			Statement stmt = DBConnection.getInstance().createStatement();
 			LOG.info("after connection");
 			ResultSet rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" limit 10");
 			LOG.info("hello");
@@ -43,90 +37,65 @@ public class App {
 				LOG.info(rs.getString(1));
 				String s = rs.getString(1);
 				LOG.info(s);
-				// String voltage = rs.getString("Voltage");
-				// System.out.format("%s\n",voltage);
 			}
-			/*
-			 * if(rs.next()){ if(starttime != null){
-			 * 
-			 * } else{ starttime = rs.getTimestamp("event_datetime__c"); long noofmillisecs
-			 * = starttime.getTime()+15*60*1000; endtime = new Timestamp(noofmillisecs); }
-			 * App app = new App(); app.timerfunction(starttime,endtime);
-			 * 
-			 * }
-			 **/
 
 		} catch (SQLException e) {
 			LOG.info("here 11 " + e.getMessage());
 		}
-		return conn;
 	}
 
-	public Connection getVoltage(String status, String weather) {
-		Connection conn = null;
+	public List<Double> getVoltage(VoltageRequest voltageRequest) {
+		List<Double> values = null;
 		try {
-			conn = DriverManager.getConnection(url, user, password);
-			LOG.info("Connected to the PostgreSQL server successfully.");
-			Statement stmt = conn.createStatement();
+			Statement stmt = DBConnection.getInstance().createStatement();
 			LOG.info("after connection");
 
-			boolean statusBool = Boolean.getBoolean(status);
+			boolean statusBool = voltageRequest.getStatus();
+			String weather = voltageRequest.getWeather();
 
 			ResultSet rs = null;
-			if (statusBool && weather.equals("sunny"))
-				rs = stmt.executeQuery(
-						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=11 and \"Voltage\"<=12 limit 10");
+			String query = null;
+			if (statusBool) {
+				if (weather.equals(SUNNY))
+					query = ("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=11 and \"Voltage\"<=12 limit 10");
 
-			else if (statusBool && weather.equals("rainy"))
-				rs = stmt.executeQuery(
-						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=9 and \"Voltage\"<=10 limit 10");
+				else if (weather.equals(RAINY))
+					query = ("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=9 and \"Voltage\"<=10 limit 10");
 
-			else if (statusBool && weather.equals("stormy"))
-				rs = stmt.executeQuery(
-						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=10 and \"Voltage\"<=11 limit 10");
+				else if (weather.equals(STORMY))
+					query = ("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=10 and \"Voltage\"<=11 limit 10");
 
-			else if (statusBool && weather.equals("moon"))
-				rs = stmt.executeQuery(
-						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=8 and \"Voltage\"<=9 limit 10");
+				else if (weather.equals(MOON))
+					query = ("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=8 and \"Voltage\"<=9 limit 10");
+			} else {
+				if (weather.equals(SUNNY))
+					query = ("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=7 and \"Voltage\"<8 limit 10");
 
-			else if (!statusBool && weather.equals("sunny"))
-				rs = stmt.executeQuery(
-						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=7 and \"Voltage\"<8 limit 10");
+				else if (weather.equals(RAINY))
+					query = ("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=1 and \"Voltage\"<2 limit 10");
 
-			else if (!statusBool && weather.equals("rainy"))
-				rs = stmt.executeQuery(
-						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=1 and \"Voltage\"<2 limit 10");
+				else if (weather.equals(STORMY))
+					query = ("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=2 and \"Voltage\"<3 limit 10");
 
-			else if (!statusBool && weather.equals("stormy"))
-				rs = stmt.executeQuery(
-						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=2 and \"Voltage\"<3 limit 10");
-
-			else if (!statusBool && weather.equals("moon"))
-				rs = stmt.executeQuery(
-						"select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=3 and \"Voltage\"<4 limit 10");
-
-			LOG.info("hello");
-			while (rs.next()) {
-				LOG.info(rs.getString(1));
-				String s = rs.getString(1);
-				LOG.info(s);
-				// String voltage = rs.getString("Voltage");
-				// System.out.format("%s\n",voltage);
+				else if (weather.equals(MOON))
+					query = ("select \"Voltage\" from public.\"Voltage Table\" where \"Voltage\">=3 and \"Voltage\"<4 limit 10");
 			}
-			/*
-			 * if(rs.next()){ if(starttime != null){
-			 * 
-			 * } else{ starttime = rs.getTimestamp("event_datetime__c"); long noofmillisecs
-			 * = starttime.getTime()+15*60*1000; endtime = new Timestamp(noofmillisecs); }
-			 * App app = new App(); app.timerfunction(starttime,endtime);
-			 * 
-			 * }
-			 **/
+
+			if (query != null) {
+				rs = stmt.executeQuery(query);
+				while (rs.next()) {
+					if (values == null)
+						values = new ArrayList<Double>();
+					values.add(rs.getDouble(1));
+
+					LOG.info(String.valueOf(rs.getDouble(1)));
+				}
+			}
 
 		} catch (SQLException e) {
-			LOG.info("here 11 " + e.getMessage());
+			LOG.info(e.getMessage(), e);
 		}
-		return conn;
+		return values;
 	}
 
 	public void timerfunction(Timestamp startTime, Timestamp endTime) throws SQLException {
@@ -136,5 +105,15 @@ public class App {
 		Timer timer = new Timer();
 		timer.schedule(new TimerClass(startTime, endTime), 0, 5000);
 	}
+
+	/*
+	 * if(rs.next()){ if(starttime != null){
+	 * 
+	 * } else{ starttime = rs.getTimestamp("event_datetime__c"); long noofmillisecs
+	 * = starttime.getTime()+15*60*1000; endtime = new Timestamp(noofmillisecs); }
+	 * App app = new App(); app.timerfunction(starttime,endtime);
+	 * 
+	 * }
+	 **/
 
 }
