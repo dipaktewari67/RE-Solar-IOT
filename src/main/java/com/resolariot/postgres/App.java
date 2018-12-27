@@ -37,7 +37,7 @@ public class App {
 			LOG.info("Connected to the PostgreSQL server successfully.");
 			Statement stmt = conn.createStatement();
 			LOG.info("after connection");
-			ResultSet rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" limit 10");
+			ResultSet rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\" BETWEEN 8 AND 12 limit 10");
 			LOG.info("hello");
 			while (rs.next()) {
 				LOG.info(rs.getString(1));
@@ -60,6 +60,36 @@ public class App {
 		return conn;
 	}
 
+	
+	public Connection getVoltage(String voltage,String season) {
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(url, user, password);
+			LOG.info("Connected to the PostgreSQL server successfully.");
+			Statement stmt = conn.createStatement();
+			LOG.info("after connection");
+			ResultSet rs = stmt.executeQuery("select \"Voltage\" from public.\"Voltage Table\"  BETWEEN 8 AND 12 limit 10");
+			LOG.info("hello");
+			while (rs.next()) {
+				LOG.info(rs.getString(1));
+				// String voltage = rs.getString("Voltage");
+				// System.out.format("%s\n",voltage);
+			}
+			/*
+			 * if(rs.next()){ if(starttime != null){
+			 * 
+			 * } else{ starttime = rs.getTimestamp("event_datetime__c"); long noofmillisecs
+			 * = starttime.getTime()+15*60*1000; endtime = new Timestamp(noofmillisecs); }
+			 * App app = new App(); app.timerfunction(starttime,endtime);
+			 * 
+			 * }
+			 **/
+
+		} catch (SQLException e) {
+			LOG.info("here 11 " + e.getMessage());
+		}
+		return conn;
+	}
 //	public Integer[] getVoltage(String voltage) {
 //
 //		Connection conn = null;
